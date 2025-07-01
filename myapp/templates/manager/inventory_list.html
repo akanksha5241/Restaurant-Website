@@ -1,0 +1,94 @@
+{% extends 'manager/base.html' %}
+
+{% block title %}
+Inventory Management
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">📦 Inventory Management</h2>
+
+    <!-- Filters Section -->
+    <div class="row mb-3">
+        <!-- Category Dropdown -->
+        <div class="col-md-4">
+            <label for="categorySelect">Category:</label>
+            <select id="categorySelect" class="form-control">
+                <option value="">Select Category</option>
+                {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Dish Dropdown -->
+        <div class="col-md-4">
+            <label for="dishSelect">Dish Name:</label>
+            <select id="dishSelect" class="form-control">
+                <option value="">Select Dish</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Inventory Table -->
+    <table class="table table-bordered mt-4">
+        <thead class="table-dark">
+            <tr>
+                <th>Item Name</th>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th>Unit</th>
+                <th>Price per Unit</th>
+                <th>Supplier</th>
+                <th>Last Updated</th>
+            </tr>
+        </thead>
+        <tbody id="inventoryTable">
+            {% for item in items %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.category }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.unit }}</td>
+                <td>₹{{ item.price_per_unit }}</td>
+                <td>{{ item.supplier }}</td>
+                <td>{{ item.last_updated }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center">No items in inventory</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'admin:index' %}" class="btn btn-primary">Manage Inventory</a>
+</div>
+
+<!-- JavaScript for Dynamic Dish Filtering -->
+<script>
+    document.getElementById('categorySelect').addEventListener('change', function () {
+        let categoryId = this.value;
+        let dishSelect = document.getElementById('dishSelect');
+
+        // Clear previous options
+        dishSelect.innerHTML = '<option value="">Select Dish</option>';
+
+        if (categoryId) {
+            fetch(`/get-dishes/?category_id=${categoryId}`)
+                .then(response => response.json())
+                .then(data => {
+                    data.dishes.forEach(dish => {
+                        let option = document.createElement('option');
+                        option.value = dish.id;
+                        option.textContent = dish.name;
+                        dishSelect.appendChild(option);
+                    });
+                });
+        }
+    });
+</script>
+
+{% endblock %}
+
+

@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+<style>
+    .rating {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: left;
+    }
+    .rating input {
+        display: none;
+    }
+    .rating label {
+        font-size: 35px !important; /* Increased from 30px to 40px */
+        color: #ddd;
+        cursor: pointer;
+        padding: 10px;
+    }
+    .rating input:checked ~ label,
+    .rating label:hover,
+    .rating label:hover ~ label {
+        color: #ffcc00;
+    }
+</style>
+
+<!-- Feedback Section Begin -->
+<div class="register-login-section spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 offset-lg-3">
+                <div class="register-form">
+                    <h2>Feedback</h2>
+                    <form action="{% url 'feedback' %}" name="feedback" method="POST">
+                        {% csrf_token %}
+                        <div class="group-input">
+                            <label for="feedback-name">Your Name *</label>
+                            <input type="text" id="feedback-name" placeholder="Enter Name" value="{{ user.fname }}" name="name">
+                        </div>
+                        <div class="group-input">
+                            <label for="feedback-email">Your Email *</label>
+                            <input type="email" id="feedback-email" placeholder="Enter Email" value="{{ user.email }}" name="email">
+                        </div>
+                        <div class="col-lg-12">
+                            <label>Rating *</label>
+                            <div class="rating">
+                                <input type="radio" id="star5" name="rating" value="5"><label for="star5">&#9733;</label>
+                                <input type="radio" id="star4" name="rating" value="4"><label for="star4">&#9733;</label>
+                                <input type="radio" id="star3" name="rating" value="3"><label for="star3">&#9733;</label>
+                                <input type="radio" id="star2" name="rating" value="2"><label for="star2">&#9733;</label>
+                                <input type="radio" id="star1" name="rating" value="1"><label for="star1">&#9733;</label>
+                            </div>
+                        </div>
+                        <div class="group-input">
+                            <label for="feedback-msg">Feedback Message *</label>
+                            <input type="text" id="feedback-message" placeholder="Enter Your Review..." name="message">
+                        </div>
+                        <button type="submit" class="site-btn feedback-btn">Submit Feedback</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Feedback Form Section End -->
+
+{% endblock %}

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Fake Payment</title>
+    <style>
+        body {
+            background: #f4f4f4;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .payment-container {
+            background: white;
+            padding: 30px 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+
+        .payment-container h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .payment-container label {
+            display: block;
+            margin-top: 15px;
+            color: #555;
+        }
+
+        .payment-container input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .payment-container button {
+            width: 100%;
+            background-color: #28a745;
+            color: white;
+            padding: 12px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .payment-container button:hover {
+            background-color: #218838;
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="payment-container">
+        <h1>Enter Payment Details</h1>
+        <form method="POST" action="{% url 'success' %}" onsubmit="return checkLimit()">
+            {% csrf_token %}
+            <label>Card Number:</label>
+            <input type="text" name="card" placeholder="4242 4242 4242 4242" required>
+            <label>Expiry Date:</label>
+            <input type="text" name="expiry" placeholder="MM/YY" required>
+            <label>CVV:</label>
+            <input type="text" name="cvv" placeholder="123" required>
+            <button type="submit">Pay Now</button>
+            <div class="error" id="error-msg"></div>
+        </form>
+    </div>
+
+    <script>
+        // Limit attempts
+        const form = document.querySelector("form");
+
+        form.addEventListener("submit", function (event) {
+            let count = localStorage.getItem('payment_attempts');
+            count = count ? parseInt(count) : 0;
+
+            if (count >= 12) {
+                document.getElementById('error-msg').innerText = "You have reached the maximum number of payment attempts.";
+                event.preventDefault();
+                return false;
+            }
+
+            localStorage.setItem('payment_attempts', count + 1);
+        });
+
+        // Auto format card input (xxxx xxxx xxxx xxxx)
+        const cardInput = document.querySelector('input[name="card"]');
+        cardInput.addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, '');
+            value = value.substring(0, 16);
+            const spaced = value.match(/.{1,4}/g);
+            e.target.value = spaced ? spaced.join(' ') : '';
+        });
+
+        // Expiry input formatting (MM/YY or MM/YYYY)
+        const expiryInput = document.querySelector('input[name="expiry"]');
+        expiryInput.addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.substring(0, 6); // up to MMYYYY
+                value = value.slice(0, 2) + '/' + value.slice(2);
+            }
+            e.target.value = value;
+        });
+
+        // Enforce expiry format on blur (check valid MM and year)
+        expiryInput.addEventListener('blur', function (e) {
+            const value = e.target.value;
+            const parts = value.split('/');
+            const month = parseInt(parts[0]);
+            const year = parts[1];
+
+            if (!month || month < 1 || month > 12 || !year || (year.length !== 2 && year.length !== 4)) {
+                document.getElementById('error-msg').innerText = "Invalid expiry date. Use MM/YY or MM/YYYY.";
+                e.target.focus();
+            }
+        });
+
+        // Enforce 3-digit CVV only
+        const cvvInput = document.querySelector('input[name="cvv"]');
+        cvvInput.addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, '');
+            e.target.value = value.substring(0, 3);
+        });
+    </script>
+
+</body>
+
+</html>
