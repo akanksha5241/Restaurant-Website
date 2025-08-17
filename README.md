@@ -5,11 +5,13 @@
 
 1. First Of all create virtual environment
    - I can attach file you can easily create 
+---
 
 2. Create a virtual environment, then go to the restaurant-website folder.
    - Navigate to the location where the manage.py file is present.
    - Open the Command Prompt from that location (right-click → Open in Terminal / CMD) or open the folder in VS Code.
   
+---
 
 3. And then you run this command
    - python manage.py runserver
