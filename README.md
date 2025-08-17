@@ -1,7 +1,6 @@
 # Restaurant-Website
 
 
----
 
 1. First Of all create virtual environment
    - I can attach file you can easily create 
