@@ -1,0 +1,51 @@
+METHOD :::: 1
+
+1). create folder in D drive [virtual_environments  <<-(folder name (anythink) ]
+
+2). Create folder Open and click on right click and click (-->>open with Vscode)
+
+3). Select terminal and click +ni baju ma down arrow and click Command prompt
+
+4).And run command ((-->>> python -m virtualenv [[django]] )).........[your env name]
+
+5). And go to the virtual_environments -> django -> Scripts -> then above path see 
+		D:\virtual_environments\django\Scripts
+
+then you simply copy this path and store in the txt file and add activate word in this path like this
+
+		D:\virtual_environments\django\Scripts\activate
+	
+
+METHOD :::: 2
+
+6).  And then django folder show then you can open in cmd and run this above path this
+
+D:\virtual_environments\django\Scripts\activate
+
+(django) C:\Users\vipul s patel\Desktop\virtual-env>
+
+THEN install this package
+
+
+1. pip install pandas
+2. pip install numpy
+3. pip install django
+4. pip install stripe
+
+
+je package install che ae jova mate
+-->> pip list
+
+
+
+7). jaya virtual environment activate karavu che taya right click 
+ 
+then-->>(open with code) click 
+
+and open terminal and down arrow and click 
+
+-->> command prompt select 
+
+then activate path automatic 
+
+and run command (( python manage.py runserver )) then website
